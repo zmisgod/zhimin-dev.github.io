@@ -1,0 +1,20 @@
+#homeIndexMain{
+    display: flex;
+    justify-content: center;
+    .homeIndexContainer{
+        max-width: 720px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .title{
+            font-size: 20px;
+        }
+        .routeList{
+            font-size: 20px;
+            .routeItem{
+
+            }
+        }
+    }
+}

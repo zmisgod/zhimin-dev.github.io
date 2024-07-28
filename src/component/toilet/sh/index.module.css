@@ -1,0 +1,63 @@
+.container{
+    .title {
+        text-align: center;
+        font-size: 24px;
+    }
+    .menuGuide{
+        display: flex;
+        flex-direction: column;
+        .menuOperate{
+            display: flex;
+            flex-direction: row;
+            .selectedLine{
+                margin-right: 10px;
+            }
+            .resetMenu{
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        .stationList{
+            .oneStation{
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #eee;
+                .stationName{
+                    font-size: 20px;
+                }
+                .toiletInfo{
+                    .toiletList{
+                        padding-bottom: 10px;
+                        .toiletLine{
+                            width: 300px;
+                            border-top-right-radius: 20px;
+                        }
+                        .toiletDesc{
+                            margin-left: 40px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .oneLine{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        cursor: pointer;
+        &:hover{
+            border: 2px solid #fff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .lineName{
+
+        }
+    }
+    .footer{
+        margin-left: 20px;
+    }
+}
