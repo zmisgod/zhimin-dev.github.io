@@ -20,9 +20,6 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
-      - name: alter assest config
-        run: echo '{"epark":{"fullUrl":"https://zhimin-dev.github.io/#/epark"}}' > src/assets/config.json
-
       - name: Build project
         run: npm run build
 
