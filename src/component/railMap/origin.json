@@ -1,0 +1,55 @@
+[{
+    "canvas": null,
+    "canvasCtx": null,
+    "name": "一号线",
+    "lineNumber": 1,
+    "draftPoint": [],
+    "saveLines": [],
+    "lineColor": "#e3002b",
+    "lineWidth": 10,
+    "lastClick": null,
+    "show":true,
+    "stations":[{
+        "name":"莘庄",
+        "geo":{"x":0,"y":0}
+    },{
+        "name":"外环路",
+        "geo":{"x":0,"y":0}
+    }]
+}, {
+    "canvas": null,
+    "canvasCtx": null,
+    "name": "二号线",
+    "lineNumber": 2,
+    "draftPoint": [],
+    "saveLines": [],
+    "lineColor": "#8cc220",
+    "lineWidth": 10,
+    "lastClick": null,
+    "show":true,
+    "stations":[]
+}, {
+    "canvas": null,
+    "canvasCtx": null,
+    "name": "三号线",
+    "lineNumber": 3,
+    "draftPoint": [],
+    "saveLines": [],
+    "lineColor": "#fcd600",
+    "lineWidth": 10,
+    "lastClick": null,
+    "show":true,
+    "stations":[]
+}, {
+    "canvas": null,
+    "canvasCtx": null,
+    "name": "四号线",
+    "draftPoint": [],
+    "lineNumber": 4,
+    "saveLines": [],
+    "lineColor": "#461d84",
+    "lineWidth": 10,
+    "lastClick": null,
+    "show":true,
+    "stations":[]
+}]

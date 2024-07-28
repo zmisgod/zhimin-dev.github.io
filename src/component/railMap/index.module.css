@@ -1,0 +1,81 @@
+.main{
+    min-height:100vh;
+}
+
+
+.canvasContainer{
+    position: relative;
+    canvas{
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+.footer{
+    padding: 10px;
+    position: fixed;
+    background-color: #fff;
+    border:1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .footerInner{
+        display: flex;
+    }
+    .footerHeader{
+        display: flex;
+        margin-bottom: 10px;
+        .footerGoBack{
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    }
+    .oneExample{
+        display: flex;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 5px;
+        margin: 1px;
+        cursor: pointer;
+        flex-direction: column;
+        .exampleName{
+            padding-right: 10px;
+            text-decoration: underline;
+        }
+        .examplePic{
+            width:40px;
+            height:20px
+        }
+    }
+    .stationDetail{
+        .exampleDetailContainer{
+            .exampleDetail{
+                padding: 0 10px;
+            }
+            .exampleDetailList{
+                .oneStation{
+                    text-decoration: underline;
+                    cursor: pointer;
+                    .stationName{
+                        padding-right: 4px;
+                        text-decoration: underline;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+    .btnList{
+        padding: 10Px 0;
+        display: flex;
+        flex-direction: column;
+        button {
+            margin-right: 4px;
+        }
+    }
+}
+.canvasConatiner {
+    .svgConatiner{
+        background-color: #fff;
+    }
+}
