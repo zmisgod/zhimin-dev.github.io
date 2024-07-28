@@ -19,7 +19,7 @@ function eParkTag() {
   const [decodeAesKey, setDecodeAesKey] = useState('')
 
   useEffect(() => {
-    let data = new URLSearchParams(window.location.search)
+    let data = new URLSearchParams(window.location.search?window.location.search:window.location.hash)
     let passData = data.get("data");
     if (passData !== null) {
       setNowMode(0)
