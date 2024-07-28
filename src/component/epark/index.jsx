@@ -5,7 +5,6 @@ import QRCode from 'qrcode'
 import CryptoJS from 'crypto-js';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
-import configJson from './../../assets/config.json';
 
 function eParkTag() {
   const [carTag, setCarTag] = useState('')
@@ -70,7 +69,7 @@ function eParkTag() {
     let enData = AES_ECB_ENCRYPT(userConnect, carTag)
     let gemData = base64Encode(enData)
     console.log(gemData)
-    let url = configJson.epark.fullUrl + "?&data=" + gemData
+    let url = window.location.href + "?&data=" + gemData
     setResultLink(url)
     let data = await QRCode.toDataURL(url)
     setImageData(data)
