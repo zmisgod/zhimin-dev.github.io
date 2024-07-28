@@ -7,14 +7,19 @@ import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 
 function eParkTag() {
-  const [carTag, setCarTag] = useState('')
-  const [userConnect, setUserConnect] = useState('')
-  const [imgData, setImageData] = useState('')
   const [nowMode, setNowMode] = useState(0)// 0解析数据模式，1新建模式
-  const [resultData, setResultData] = useState('')
+  // 新建模式
+  const [imgData, setImageData] = useState('')
   const [resultLink, setResultLink] = useState('')
+  const [saveData, setSaveData] = useState({
+    "type":"mobile",
+    "contactInfo":"",// 联系信息
+    "tag":"",//标签
+  })
 
+  // 解析模式
   const [errorMsg, setErrorMsg] = useState('')
+  const [resultData, setResultData] = useState(null)
   const [passData, setPassData] = useState('')
   const [decodeAesKey, setDecodeAesKey] = useState('')
 
@@ -31,9 +36,15 @@ function eParkTag() {
 
   const userInputChange = (e) => {
     if (e.target.id === 'carTag') {
-      setCarTag(formateKey(e.target.value))
+      setSaveData({
+        ...saveData,
+        tag: e.target.value
+      });
     } else if (e.target.id === 'userConnect') {
-      setUserConnect(e.target.value)
+      setSaveData({
+        ...saveData,
+        contactInfo: e.target.value
+      });
     }
   }
 
@@ -65,10 +76,24 @@ function eParkTag() {
     return key.toLowerCase()
   }
 
+  const getOriData = () => {
+    return {
+      "e":saveData.type,
+      "o":saveData.contactInfo,
+    }
+  }
+
+  const parseData = (str) => {
+    try{
+      return JSON.parse(str)
+    }catch(e){
+      return null
+    }
+  }
+
   const onGen = async () => {
-    let enData = AES_ECB_ENCRYPT(userConnect, carTag)
+    let enData = AES_ECB_ENCRYPT(JSON.stringify(getOriData()), saveData.tag)
     let gemData = base64Encode(enData)
-    console.log(gemData)
     let url = window.location.href + "?&data=" + gemData
     setResultLink(url)
     let data = await QRCode.toDataURL(url)
@@ -80,10 +105,9 @@ function eParkTag() {
       setErrorMsg('输入为空')
       return
     }
-    let getData = base64Decode(passData)
-    let deStr = AES_ECB_DECRYPT(getData, decodeAesKey)
-    let decodeData = deStr.toString()
-    if (decodeData !== '') {
+    let deStr = AES_ECB_DECRYPT(base64Decode(passData), decodeAesKey)
+    let decodeData = parseData(deStr.toString())
+    if (decodeData !== null) {
       setResultData(decodeData)
     } else {
       setErrorMsg('解析失败，请重试')
@@ -125,14 +149,14 @@ function eParkTag() {
             }}>
               <TextField id="carTag"
                 onChange={userInputChange}
-                value={carTag}
+                value={saveData.tag}
                 label="输入车牌"
                 variant="standard"
               />
               <TextField
                 id="userConnect"
                 onChange={userInputChange}
-                value={userConnect}
+                value={saveData.contactInfo}
                 label="输入联系方式"
                 variant="standard" />
               <Button onClick={onGen}>点击生成</Button>
@@ -152,7 +176,7 @@ function eParkTag() {
             }}>
 
               {
-                resultData === '' ? (
+                resultData === null ? (
                   <>
                     <TextField id="carTag"
                       onChange={userInputDecodeKey}
@@ -163,7 +187,7 @@ function eParkTag() {
                     <Button onClick={onDecode}>获取联系方式</Button>
                   </>
                 ) : (
-                  <a href={'tel:' + resultData}>拨打电话</a>
+                  <a href={'tel:' + resultData.o}>拨打电话</a>
                 )
               }
             </Box>
