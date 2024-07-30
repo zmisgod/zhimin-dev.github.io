@@ -1,0 +1,23 @@
+<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1248.5 1375.7">
+	<style>
+		.st0{
+			fill:none;stroke:#000;stroke-width:2;stroke-miterlimit:10;
+		}
+		.st1{
+			fill:none;stroke:red;stroke-width:4;stroke-miterlimit:10;
+		}
+	</style>
+	<g>
+	<path class="st1" d="M100,50L100,95C100,95,100,100,95,100L50,100"></path>
+	<path class="st1" d="M50,100L50,145C50,145,50,150,55,150L100,150"></path>
+	<!-- 
+ 
+	<path class="st1" d="M100,50L100,145C100,145,100,150,105,150L150,150"></path>
+		<path class="st1" d="M100,150L100,105C100,105,100,100,105,100L150,100"></path>
+	 <path class="st1" d="M100,150L100,105C100,105,100,100,105,100L150,100"></path>
+ <path class="st1" d="M100,150L100,105C100,105,100,100,95,100L50,100"></path>
+	<path class="st1" d="M150,150L150,55C150,55,150,50,145,50L100,50"></path>
+		<path class="st1" d="M50,100L50,55C50,55,50,50,55,50L100,50"></path>
+		-->
+	</g>
+</svg>
