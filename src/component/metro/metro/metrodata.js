@@ -21,11 +21,12 @@ class MathetroData {
             let startPoint = this.startPoint
             let endPoint = this.endPoint
             if (endPoint.y > startPoint.y) {
+                console.log('------end.y > start.y')
                 if (endPoint.x - startPoint.x > 0) {
                     curLine = endPoint.x - startPoint.x
                     midPointX = startPoint.x
                     midPointY = endPoint.y
-                    console.log('=-=====1111----')
+                    console.log('end.x > start.x')
                     console.log("midPoint", midPointX, midPointY)
                     let curPoint = parseInt(curLine / 10)
                     console.log(curPoint)
@@ -39,6 +40,7 @@ class MathetroData {
                         + "C" + startCurPointX + "," + startCurPointY + "," + midPointX + "," + midPointY + "," + endCurPointX + "," + endCurPointY
                         + "L" + endPoint.x + "," + endPoint.y
                 } else {
+                    console.log('end.x <= start.x')
                     curLine = startPoint.x - endPoint.x
                     midPointX = startPoint.x
                     midPointY = endPoint.y
@@ -57,11 +59,12 @@ class MathetroData {
                         + "L" + endPoint.x + "," + endPoint.y
                 }
             } else {
+                console.log('------end.y <= start.y')
                 if (endPoint.x - startPoint.x > 0) {
+                    console.log('------end.x > start.x')
                     curLine = endPoint.x - startPoint.x
                     midPointX = startPoint.x
                     midPointY = endPoint.y
-                    console.log('=-=====1111----')
                     console.log("midPoint", midPointX, midPointY)
                     let curPoint = parseInt(curLine / 10)
                     console.log(curPoint)
@@ -75,10 +78,10 @@ class MathetroData {
                         + "C" + startCurPointX + "," + startCurPointY + "," + midPointX + "," + midPointY + "," + endCurPointX + "," + endCurPointY
                         + "L" + endPoint.x + "," + endPoint.y
                 } else {
+                    console.log('------end.x <= start.x')
                     curLine = startPoint.x - endPoint.x
                     midPointX = startPoint.x
                     midPointY = endPoint.y
-                    console.log('=-=====2222----')
                     console.log("midPoint", midPointX, midPointY)
                     let curPoint = parseInt(curLine / 10)
                     console.log("curPoint", curPoint)
@@ -93,7 +96,6 @@ class MathetroData {
                         + "L" + endPoint.x + "," + endPoint.y
                 }
             }
-
         } else if (this.lineType === 3) {
             let calMinHeight = 0
             if (this.endPoint.y - this.startPoint.y > 0) {
@@ -101,21 +103,40 @@ class MathetroData {
             } else {
                 calMinHeight = this.startPoint.y - this.endPoint.y
             }
-            console.log(calMinHeight)
-            let miPointX = this.startPoint.x + calMinHeight
-            let minPointY = this.endPoint.y
-            console.log("miPoint", miPointX, minPointY)
-            let curLine = calMinHeight / 10
-            console.log("curLine", curLine)
-            let curPoint1X = miPointX - curLine
-            let curPoint1Y = this.endPoint.y - curLine
-            console.log("curPoint1", curPoint1X, curPoint1Y)
-            let curPoint2X = miPointX + curLine
-            let curPoint2Y = this.endPoint.y
-            console.log("curPoint2", curPoint2X, curPoint2Y)
-            return 'M' + this.startPoint.x + "," + this.startPoint.y + "," + curPoint1X + "," + curPoint1Y
-                + "C" + curPoint1X + "," + curPoint1Y + "," + miPointX + "," + minPointY + "," + curPoint2X + "," + curPoint2Y
-                + "L" + this.endPoint.x + "," + this.endPoint.y
+            if (this.endPoint.x > this.startPoint.x) {
+                console.log(calMinHeight)
+                let miPointX = this.startPoint.x + calMinHeight
+                let minPointY = this.endPoint.y
+                console.log("miPoint", miPointX, minPointY)
+                let curLine = calMinHeight / 10
+                console.log("curLine", curLine)
+                let curPoint1X = miPointX - curLine
+                let curPoint1Y = this.endPoint.y - curLine
+                console.log("curPoint1", curPoint1X, curPoint1Y)
+                let curPoint2X = miPointX + curLine
+                let curPoint2Y = this.endPoint.y
+                console.log("curPoint2", curPoint2X, curPoint2Y)
+                return 'M' + this.startPoint.x + "," + this.startPoint.y + "," + curPoint1X + "," + curPoint1Y
+                    + "C" + curPoint1X + "," + curPoint1Y + "," + miPointX + "," + minPointY + "," + curPoint2X + "," + curPoint2Y
+                    + "L" + this.endPoint.x + "," + this.endPoint.y
+            }else{
+                console.log(calMinHeight)
+                let miPointX =  this.startPoint.x - calMinHeight
+                let minPointY = this.endPoint.y
+                console.log("miPoint", miPointX, minPointY)
+                let curLine = calMinHeight / 10
+                console.log("curLine", curLine)
+                let curPoint1X = miPointX + curLine
+                let curPoint1Y = this.endPoint.y + curLine
+                console.log("curPoint1", curPoint1X, curPoint1Y)
+                let curPoint2X = miPointX - curLine
+                let curPoint2Y = this.endPoint.y
+                console.log("curPoint2", curPoint2X, curPoint2Y)
+                return 'M' + this.startPoint.x + "," + this.startPoint.y + "," + curPoint1X + "," + curPoint1Y
+                    + "C" + curPoint1X + "," + curPoint1Y + "," + miPointX + "," + minPointY + "," + curPoint2X + "," + curPoint2Y
+                    + "L" + this.endPoint.x + "," + this.endPoint.y
+            }
+            
         } else if (this.lineType === 4) {
             let curLine = 0
             let midPointX = 0

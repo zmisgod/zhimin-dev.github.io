@@ -1,25 +1,29 @@
 import metroData from './src/component/metro/metro/metrodata.js'
 import fs from 'fs';
 
-let a = new metroData({x:100, y:50},{x:50,y:100},2);
-let b = new metroData({x:100, y:50},{x:150,y:100},2);
-let c = new metroData({x:50, y:100},{x:100,y:150},2);
-let h = new metroData({x:150,y:100}, {x:100, y:150},2);
+// let a = new metroData({x:100, y:50},{x:50,y:100},2);
+// let b = new metroData({x:100, y:50},{x:150,y:100},2);
+// let c = new metroData({x:50, y:100},{x:100,y:150},2);
+// let d = new metroData({x:150,y:100}, {x:100, y:150},2);
+// let e = new metroData({x:50,y:100},{x:100, y:50},2);
+// let f = new metroData({x:150,y:100},{x:100, y:50},2);
+// let g = new metroData({x:100,y:150},{x:50, y:100},2);
+// let h = new metroData({x:100, y:150},{x:150,y:100},2);
 
+// let a = new metroData({x:50, y:50},{x:150,y:100},3);
+// let b = new metroData({x:150, y:50},{x:100,y:150},3);
+// let c = new metroData({x:50, y:50},{x:100,y:150},3);
+// let d = new metroData({x:150, y:50},{x:50,y:100},3);
 
-let d = new metroData({x:50,y:100},{x:100, y:50},2);
-let f = new metroData({x:150,y:100},{x:100, y:50},2);
-let g = new metroData({x:100,y:150},{x:50, y:100},2);
-let e = new metroData({x:100, y:150},{x:150,y:100},2);
+// let a = new metroData({x:50, y:50},{x:150,y:100},3);
+// let b = new metroData({x:150, y:100},{x:50,y:50},3);
+let a = new metroData({x:50, y:50},{x:100,y:150},3);
+let b = new metroData({x:100, y:50},{x:50,y:150},3);
 
-
-{/* <path class="st1" d="${d.getPath()}"></path>
-<path class="st1" d="${a.getPath()}"></path>
-<path class="st1" d="${b.getPath()}"></path>
-<path class="st1" d="${f.getPath()}"></path>
-<path class="st1" d="${h.getPath()}"></path>
-<path class="st1" d="${e.getPath()}"></path>
-<path class="st1" d="${g.getPath()}"></path> */}
+{/* <path class="st1" d="${f.getPath()}"></path>
+	<path class="st1" d="${h.getPath()}"></path>
+	<path class="st1" d="${e.getPath()}"></path>
+	<path class="st1" d="${g.getPath()}"></path>  */}
 let data = `<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1248.5 1375.7">
 	<style>
 		.st0{
@@ -40,11 +44,10 @@ let data = `<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" x
 	<circle cx="100" cy="150" r="2"></circle>
 	<circle cx="150" cy="150" r="2"></circle>
 	
-
-	 <path class="st1" d="${c.getPath()}"></path>
-	 
+	<path class="st1" d="${a.getPath()}"></path>
+	<path class="st1" d="${b.getPath()}"></path>
 	<!--
-	
+		
 	-->
 	</g>
 </svg>`
