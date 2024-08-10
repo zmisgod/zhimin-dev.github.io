@@ -23,25 +23,22 @@ class MathetroData {
         }else{
             w = xLen
         }
-        let calMinHeight = 0
+        console.log('w = ', w, " longType=",longType)
         if (this.lineType === 1) {
             return 'M' + this.startPoint.x + "," + this.startPoint.y + 'L' + this.endPoint.x + "," + this.endPoint.y
         } else if (this.lineType === 2) {
-            let curLine = 0
             let midPointX = 0
             let midPointY = 0
             let startPoint = this.startPoint
             let endPoint = this.endPoint
             console.log("nowPoint", this.startPoint, this.endPoint)
             if (endPoint.y > startPoint.y) {
-                // console.log('------end.y > start.y')
                 if (endPoint.x - startPoint.x > 0) {
-                    curLine = xLen
                     midPointX = startPoint.x
                     midPointY = endPoint.y
                     console.log('--=-=-=-=-=-=')
                     console.log("midPoint", midPointX, midPointY, "longType", longType)
-                    let curPoint = parseInt(curLine / 10)
+                    let curPoint = parseInt(w / 10)
                     let startCurPointX;
                     let startCurPointY;
                     let endCurPointX;
@@ -72,7 +69,6 @@ class MathetroData {
                 } else {
                     console.log('reverse-----1010010101010')
                     console.log('end.x <= start.x')
-                    curLine = xLen
                     midPointX = startPoint.x
                     midPointY = endPoint.y
                     console.log('=-=====2222----')
@@ -82,7 +78,7 @@ class MathetroData {
                     }else {
                         console.log('long -----y')
                     }
-                    let curPoint = parseInt(curLine / 10)
+                    let curPoint = parseInt(w / 10)
                     console.log("curPoint", curPoint)
                     let startCurPointX = midPointX
                     let startCurPointY = midPointY - curPoint
@@ -97,11 +93,10 @@ class MathetroData {
             } else {
                 if (endPoint.x - startPoint.x > 0) {
                     console.log('------end.x > start.x')
-                    curLine = endPoint.x - startPoint.x
                     midPointX = startPoint.x
                     midPointY = endPoint.y
                     console.log("midPoint", midPointX, midPointY)
-                    let curPoint = parseInt(curLine / 10)
+                    let curPoint = parseInt(w / 10)
                     console.log(curPoint)
                     let startCurPointX = midPointX
                     let startCurPointY = midPointY + curPoint
@@ -114,11 +109,10 @@ class MathetroData {
                         + "L" + endPoint.x + "," + endPoint.y
                 } else {
                     console.log('------end.x <= start.x')
-                    curLine = startPoint.x - endPoint.x
                     midPointX = startPoint.x
                     midPointY = endPoint.y
                     console.log("midPoint", midPointX, midPointY)
-                    let curPoint = parseInt(curLine / 10)
+                    let curPoint = parseInt(w / 10)
                     console.log("curPoint", curPoint)
                     let startCurPointX = midPointX
                     let startCurPointY = midPointY + curPoint
@@ -136,12 +130,11 @@ class MathetroData {
             let miPointX;
             let miPointY;
             if (this.endPoint.y - this.startPoint.y > 0) {
-                calMinHeight = this.endPoint.y - this.startPoint.y
                 if(this.endPoint.x - this.startPoint.x > 0) {
                     miPointX = this.startPoint.x + w
                     miPointY = this.startPoint.y + w
                     console.log('---eeeee-11111', miPointX, miPointY)
-                    let curLine = calMinHeight / 10
+                    let curLine = w / 10
                     console.log("curLine", curLine)
                     let curPoint1X = miPointX - curLine
                     let curPoint1Y = miPointY- curLine
@@ -163,7 +156,7 @@ class MathetroData {
                     miPointX = this.startPoint.x - w
                     miPointY = this.startPoint.y + w
                     console.log('---eeeee-2222')
-                    let curLine = calMinHeight / 10
+                    let curLine = w / 10
                     console.log("curLine", curLine)
                     let curPoint1X = miPointX + curLine
                     let curPoint1Y = miPointY- curLine
@@ -183,9 +176,64 @@ class MathetroData {
                         + "L" + this.endPoint.x + "," + this.endPoint.y
                 }
             } else {
-                return new MathetroData({x: this.endPoint.x, y: this.endPoint.y}, {x:this.startPoint.x, y: this.startPoint.y},3).getPath()
+                if(this.endPoint.x - this.startPoint.x > 0) {
+                    miPointX = this.startPoint.x - w
+                    miPointY = this.startPoint.y - w
+                    console.log('---eeeee-11111', miPointX, miPointY)
+                    let curLine = w / 10
+                    console.log("curLine", curLine)
+                    let curPoint1X = miPointX - curLine
+                    let curPoint1Y = miPointY- curLine
+                    console.log("curPoint1", curPoint1X, curPoint1Y)
+                    let curPoint2X;
+                    let curPoint2Y;
+                    if(longType === 'x') {
+                         curPoint2X = miPointX + curLine
+                         curPoint2Y = miPointY 
+                    }else{
+                         curPoint2X = miPointX 
+                         curPoint2Y = miPointY +curLine
+                    }
+                    console.log("curPoint2", curPoint2X, curPoint2Y)
+                    return 'M' + this.startPoint.x + "," + this.startPoint.y + "," + curPoint1X + "," + curPoint1Y
+                        + "C" + curPoint1X + "," + curPoint1Y + "," + miPointX + "," + miPointY + "," + curPoint2X + "," + curPoint2Y
+                        + "L" + this.endPoint.x + "," + this.endPoint.y
+                }else{
+                    let startPoint;
+                    let endPoint;
+                    miPointX = this.startPoint.x - w
+                    miPointY = this.startPoint.y - w
+                    console.log('---eeeee-2222', miPointX, miPointY)
+                    let curLine = w / 10
+                    console.log("curLine", curLine)
+                    let curPoint1X;
+                    let curPoint1Y;
+                    let curPoint2X;
+                    let curPoint2Y;
+                    if(longType === 'x') {
+                        startPoint = this.startPoint
+                        endPoint = this.endPoint
+                        curPoint1X = miPointX + curLine
+                        curPoint1Y = miPointY + curLine
+                        curPoint2X = miPointX - curLine
+                        curPoint2Y = miPointY
+                    }else{
+                        startPoint = this.endPoint
+                        endPoint = this.startPoint
+                        curPoint1X = miPointX
+                        curPoint1Y = miPointY - curLine
+                        curPoint2X = miPointX + curLine
+                        curPoint2Y = miPointY + curLine
+                    }
+                    console.log("curPoint1", curPoint1X, curPoint1Y)
+                    console.log("curPoint2", curPoint2X, curPoint2Y)
+                    return 'M' + startPoint.x + "," + startPoint.y + "," + curPoint1X + "," + curPoint1Y
+                        + "C" + curPoint1X + "," + curPoint1Y + "," + miPointX + "," + miPointY + "," + curPoint2X + "," + curPoint2Y
+                        + "L" + endPoint.x + "," + endPoint.y
+                }
+                // return new MathetroData({x: this.endPoint.x, y: this.endPoint.y}, {x:this.startPoint.x, y: this.startPoint.y},3).getPath()
             }
-        } 
+        }
         // else if (this.lineType === 4) {
         //     let curLine = 0
         //     let midPointX = 0
