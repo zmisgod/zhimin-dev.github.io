@@ -15,11 +15,27 @@ import fs from 'fs';
 // let c = new metroData({x:50, y:50},{x:100,y:150},3);
 // let d = new metroData({x:150, y:50},{x:50,y:100},3);
 
+// ----cur-2---
+// let a = new metroData({ x: 50, y: 50 },{ x: 150, y: 100 },  2);
+// let b = new metroData({ x: 150, y: 100 }, { x: 50, y: 50 }, 2);
+// let c = new metroData({ x: 50, y: 50 },{ x: 100, y: 150 },  2);
+// let d = new metroData({ x: 100, y: 150 }, { x: 50, y: 50 }, 2);
+// ----cur-2---
 
-// let a = new metroData({x:50, y:50},{x:150,y:100},3);
-// let b = new metroData({x:50, y:50},{x:100,y:150},3);
-let c = new metroData({x:150,y:50}, {x:100, y:150},3);
-let d = new metroData({x:150,y:50},{x:50, y:100},3);
+// ----cur-3---
+let a = new metroData({ x: 50, y: 50 },{ x: 150, y: 100 },  3);
+let b = new metroData({ x: 150, y: 100 }, { x: 50, y: 50 }, 3);
+let c = new metroData({ x: 50, y: 50 },{ x: 100, y: 150 },  3);
+let d = new metroData({ x: 100, y: 150 }, { x: 50, y: 50 }, 3);
+// ----cur-3---
+
+// ----cur-6---
+// let a = new metroData({ x: 50, y: 50 },{ x: 100, y: 100 },  6);
+// let b = new metroData( { x: 50, y: 100 },{ x: 100, y: 50 }, 6);
+// let c = new metroData({ x: 100, y: 100 },{ x: 50, y: 50 },  6);
+// let d = new metroData( { x: 100, y: 50 },{ x: 50, y: 100 }, 6);
+// ----cur-6---
+
 
 {/* <path class="st1" d="${f.getPath()}"></path>
 	<path class="st1" d="${h.getPath()}"></path>
@@ -38,17 +54,22 @@ let data = `<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" x
 	<circle cx="50" cy="50" r="2"></circle>
 	<circle cx="100" cy="50" r="2"></circle>
 	<circle cx="150" cy="50" r="2"></circle>
+	<circle cx="200" cy="50" r="2"></circle>
 	<circle cx="50" cy="100" r="2"></circle>
 	<circle cx="100" cy="100" r="2"></circle>
 	<circle cx="150" cy="100" r="2"></circle>
+	<circle cx="200" cy="100" r="2"></circle>
 	<circle cx="50" cy="150" r="2"></circle>
 	<circle cx="100" cy="150" r="2"></circle>
 	<circle cx="150" cy="150" r="2"></circle>
+	<circle cx="200" cy="150" r="2"></circle>
 	
+	<path class="st1" d="${a.getPath()}"></path>
+	<path class="st1" d="${b.getPath()}"></path>
 	<path class="st1" d="${c.getPath()}"></path>
 	<path class="st1" d="${d.getPath()}"></path>
 	<!--
-	
+
 	-->
 	</g>
 </svg>`
