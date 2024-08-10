@@ -20,6 +20,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import shJson from './sh.json'
 import { Svg } from '@svgdotjs/svg.js';
+import MathetroData from './metrodata'
 
 
 let list = [{
@@ -66,6 +67,7 @@ let list = [{
             "angle": 90,// 0直线 90:L, 270:反L 135:
             "angle_width": 120,// 切分长度
             "angle_percent": 0,// 0 无，1三分之一 2三分之二
+            'path':''
         }, {
             "x": 450,
             "y": 285,
@@ -75,16 +77,21 @@ let list = [{
             "angle": 0,// 0直线 90:L, 270:反L 135:
             "angle_width": 120,// 切分长度
             "angle_percent": 0,// 0 无，1三分之一 2三分之二
+            'path':''
         }],
     }]
 }]
 
 export default function Metro() {
     const SVGWrapperRefElement = useRef(null);
+    const drawRef = useRef(null); // 存储 SVG 画布的引用
     
-    const SVGContainer = useMemo(() => SVG(), []);
+    // const SVGContainer = useMemo(() => SVG(), []);
     const [open, setOpen] = useState(false);
     const [nowRouter, setNowRouter] = useState('draw_map');// 0空 1车站列表 2 地铁图
+    const [startPoint, setStartPoint] = useState({x:350,y:285})
+    const [changePoint, setChangePoint] = useState({x:350,y:385})
+    const [paths, setPaths] = useState([{ startX: 350, startY: 285, endX: 350, endY: 385 }])
     const [menuList, setMenuList] = useState([{
         "name": "车站",
         "key": 'statiom_list',
@@ -102,14 +109,48 @@ export default function Metro() {
         circleColor: '#000',
         circleWidth: 10,
     })
-    useEffect(() => {}, [SVGWrapperRefElement, SVGContainer]);
 
     const selectedStationNodeRef = useRef(null);
 
+    const updatePath = (startX, startY, endX, endY) => {
+        const updatedPaths = paths.map(path => {
+            // const key = `${path.startX},${path.startY}-${path.endX},${path.endY}`;
+            // const newKey = `${startX},${startY}-${endX},${endY}`;
+            // if (key === newKey) {
+                // 更新路径的坐标
+            return { startX, startY, endX, endY };
+            // }
+            // return path;
+        });
+        console.log('----', endX, endY, updatedPaths)
+
+        setPaths(updatedPaths);
+        // const draw = SVG().addTo(SVGWrapperRefElement.current).size(svgStyle.width, svgStyle.height);
+        drawPaths(drawRef.current, updatedPaths);
+    };
+
+    const addPath = (startX, startY, endX, endY) => {
+        const newPath = { startX, startY, endX, endY };
+        setPaths(prevPaths => [...prevPaths, newPath]);
+        // const draw = SVG().addTo(SVGWrapperRefElement.current).size(svgStyle.width, svgStyle.height);
+        drawPaths(drawRef.current, [...paths, newPath]);
+    };
+
+    const drawPaths = (draw, paths) => {
+        // 清空画布
+        draw.clear();
+        // 绘制所有路径
+        paths.forEach(({ startX, startY, endX, endY }) => {
+            let d = new MathetroData({x:startX, y:startY}, {x:endX, y:endY}, 3).getPath()
+            draw.path(d).fill('none').stroke({ width: 1, color: 'black' });
+        });
+    };
+
+
     useEffect(() => {
         if (nowRouter === 'draw_map') {
-            SVGWrapperRefElement.current = SVG().addTo('body').size(svgStyle.width, svgStyle.height)
-            SVGWrapperRefElement.current.on('click', (e) => {
+            drawRef.current = SVG().addTo(SVGWrapperRefElement.current).size(svgStyle.width, svgStyle.height);
+            drawRef.current.on('click', (e) => {
                 e.preventDefault()
                 console.log('click')
             //     if(e.target && e.target.localName === 'text') {
@@ -119,25 +160,31 @@ export default function Metro() {
             //         selectedStationNodeRef.current.draggable()
             //     }
             })
-            SVGWrapperRefElement.current.on('mouseup', (e) => {
+            drawRef.current.on('mouseup', (e) => {
                 e.preventDefault()
                 if(selectedStationNodeRef.current !== null) {
                     
                 }
             })
-            SVGWrapperRefElement.current.on('mousemove', (e) => {
+            drawRef.current.on('mousemove', (e) => {
                 e.preventDefault()
                 if(e.target.nodeName.toLowerCase() !== 'svg') {
                     if(selectedStationNodeRef.current !== null 
                     ) {
-                            console.log("mouse move", e)
+                        console.log("mouse move", e)
+                        // let p = new MathetroData(startPoint, {x:e.clientX, y:e.clientY}, 3).getPath()
+                        if(paths.length === 0) {
+                            addPath(startPoint.x, startPoint.y, e.clientX, e.clientY)
+                        }else{
+                            updatePath(startPoint.x, startPoint.y, e.clientX, e.clientY)
+                        }
                     }
                 }
             })
-            SVGWrapperRefElement.current.on('touchstart', (e) => {
+            drawRef.current.on('touchstart', (e) => {
                 console.log('touchstart----',e)
             })
-            SVGWrapperRefElement.current.on('mousedown', (e) => {
+            drawRef.current.on('mousedown', (e) => {
                 console.log('mousedown----',e)
                 e.preventDefault()
                 console.log('mousedown',e)
@@ -155,17 +202,18 @@ export default function Metro() {
                     }
                 }
             })
-            SVGWrapperRefElement.current.group().addClass('1-200-100-400-600').path("M200 100 L 400 600").fill("none").stroke({ color: '#000', width: 6, linecap: 'round', linejoin: 'round' });
+            // draw.group().addClass('1-200-100-400-600').path("M200 100 L 400 600").fill("none").stroke({ color: '#000', width: 6, linecap: 'round', linejoin: 'round' });
             for (let line = 0; line < lineList.length; line++) {
                 if(lineList[line].line_no !== 1) {
                     continue;
                 }
+
                 for (let i = 0; i < lineList[line].stations.length; i++) {
                     let pointList = lineList[line].stations[i];
                     if (pointList.x === undefined || pointList.x === 0) {
                         continue;
                     }
-                    var group = SVGWrapperRefElement.current.group();
+                    var group = drawRef.current.group();
                     if (pointList.nextPoint !== undefined && pointList.nextPoint.length > 0) {
                         for (let next = 0; next < pointList.nextPoint.length; next++) {
                             let onePoint = pointList.nextPoint[next]
@@ -218,8 +266,6 @@ export default function Metro() {
                     }
                 }
             }
-        } else {
-            SVGWrapperRefElement.current = null;
         }
     }, [nowRouter])
 
