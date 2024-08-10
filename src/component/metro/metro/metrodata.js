@@ -132,6 +132,7 @@ class MathetroData {
                 }
             }
         } else if (this.lineType === 3) {
+            // todo 如果确定的直角边就是终点，那么直接返回直线
             let miPointX;
             let miPointY;
             if (this.endPoint.y - this.startPoint.y > 0) {

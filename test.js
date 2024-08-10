@@ -23,10 +23,12 @@ import fs from 'fs';
 // ----cur-2---
 
 // ----cur-3---
-let a = new metroData({ x: 50, y: 50 },{ x: 150, y: 100 },  3);
-let b = new metroData({ x: 150, y: 100 }, { x: 50, y: 50 }, 3);
-let c = new metroData({ x: 50, y: 50 },{ x: 100, y: 150 },  3);
-let d = new metroData({ x: 100, y: 150 }, { x: 50, y: 50 }, 3);
+let a = new metroData({ x: 50, y: 50 },{ x: 200, y: 100 },  3);
+let b = new metroData({ x: 200, y: 100 }, { x: 50, y: 50 }, 3);
+let c = new metroData({ x: 50, y: 50 },{ x: 100, y: 200 },  3);
+let d = new metroData({ x: 100, y: 200 }, { x: 50, y: 50 }, 3);
+let e = new metroData({ x: 50, y: 50 },{ x: 150, y: 150 },  3);
+
 // ----cur-3---
 
 // ----cur-6---
@@ -63,11 +65,16 @@ let data = `<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" x
 	<circle cx="100" cy="150" r="2"></circle>
 	<circle cx="150" cy="150" r="2"></circle>
 	<circle cx="200" cy="150" r="2"></circle>
+	<circle cx="50" cy="200" r="2"></circle>
+	<circle cx="100" cy="200" r="2"></circle>
+	<circle cx="150" cy="200" r="2"></circle>
+	<circle cx="200" cy="200" r="2"></circle>
 	
 	<path class="st1" d="${a.getPath()}"></path>
 	<path class="st1" d="${b.getPath()}"></path>
 	<path class="st1" d="${c.getPath()}"></path>
 	<path class="st1" d="${d.getPath()}"></path>
+	<path class="st1" d="${e.getPath()}"></path>
 	<!--
 
 	-->
