@@ -22,69 +22,10 @@ import shJson from './sh.json'
 import { Svg } from '@svgdotjs/svg.js';
 import MathetroData from './metrodata'
 
-
-let list = [{
-    "name": "十三号线",
-    "color": "pink",
-    "strokeWidth": 6,
-    "stations": []
-}, {
-    "name": "十三号线",
-    "color": "pink",
-    "strokeWidth": 6,
-    "stations": [{
-        "x": 200,
-        "y": 285,
-        "station_name": "金沙江路",
-        "station_name_position": {
-            "x": 210,
-            "y": 285
-        },
-        "nextPoint": [{
-            "x": 350,
-            "y": 285,
-            "type": 2, // 1 直线，2 crave
-            "mX": 0,
-            "mY": 0,
-            "angle": 2,// 0直线 90:L, 270:反L 135:
-            "angle_width": 100,// 切分长度
-            "angle_percent": 0,// 0 无，1三分之一 2三分之二
-        }],
-    }, {
-        "x": 350,
-        "y": 285,
-        "station_name": "大渡河路",
-        "station_name_position": {
-            "x": 360,
-            "y": 285
-        },
-        "nextPoint": [{
-            "x": 450,
-            "y": 385,
-            "type": 1, // 1 直线，2 crave
-            "mX": 0,
-            "mY": 0,
-            "angle": 90,// 0直线 90:L, 270:反L 135:
-            "angle_width": 120,// 切分长度
-            "angle_percent": 0,// 0 无，1三分之一 2三分之二
-            'path':''
-        }, {
-            "x": 450,
-            "y": 285,
-            "type": 1, // 1 直线，2 crave
-            "mX": 0,
-            "mY": 0,
-            "angle": 0,// 0直线 90:L, 270:反L 135:
-            "angle_width": 120,// 切分长度
-            "angle_percent": 0,// 0 无，1三分之一 2三分之二
-            'path':''
-        }],
-    }]
-}]
-
 export default function Metro() {
     const SVGWrapperRefElement = useRef(null);
     const drawRef = useRef(null); // 存储 SVG 画布的引用
+    const mouseHold = useRef(null); // 当前是否鼠标按压
     
     // const SVGContainer = useMemo(() => SVG(), []);
     const [open, setOpen] = useState(false);
@@ -125,24 +66,47 @@ export default function Metro() {
         console.log('----', endX, endY, updatedPaths)
 
         setPaths(updatedPaths);
-        // const draw = SVG().addTo(SVGWrapperRefElement.current).size(svgStyle.width, svgStyle.height);
         drawPaths(drawRef.current, updatedPaths);
     };
 
     const addPath = (startX, startY, endX, endY) => {
         const newPath = { startX, startY, endX, endY };
         setPaths(prevPaths => [...prevPaths, newPath]);
-        // const draw = SVG().addTo(SVGWrapperRefElement.current).size(svgStyle.width, svgStyle.height);
         drawPaths(drawRef.current, [...paths, newPath]);
     };
 
-    const drawPaths = (draw, paths) => {
+    const drawStations = (draw) => {
         // 清空画布
         draw.clear();
+        shJson.map((val,index) => {
+            val.stations.map((s, sIndex) => {
+                let id = s.x+ "-"+s.y
+                let group;
+                if ((s.x > 0 && s.y > 0) || s.station_name_position !== undefined) {
+                     group = draw.group().translate(s.x, s.y).attr("id", id)
+                }
+                if (s.x > 0 && s.y > 0) {
+                    group.circle(svgStyle.circleWidth).
+                    stroke({ color: svgStyle.circleColor }).
+                    fill("#fff").
+                    move(-svgStyle.circleWidth / 2, -svgStyle.circleWidth / 2);
+                }
+                if (s.station_name_position !== undefined) {
+                    group.text(s.station_name).
+                    move(0, 5).
+                    font({ fontWeight: 'bold', family: 'Inconsolata' });
+                }
+            })
+        })
+    }
+
+    const drawPaths = (draw, paths) => {
+        // 清空画布
+        // draw.clear();
         // 绘制所有路径
         paths.forEach(({ startX, startY, endX, endY }) => {
             let d = new MathetroData({x:startX, y:startY}, {x:endX, y:endY}, 3).getPath()
-            draw.path(d).fill('none').stroke({ width: 1, color: 'black' });
+            draw.path(d).fill('none').stroke({ width: 1, color: 'black' }).attr('id', `${startX},${startY}-${endX},${endY}`);
         });
     };
 
@@ -153,6 +117,7 @@ export default function Metro() {
             drawRef.current.on('click', (e) => {
                 e.preventDefault()
                 console.log('click')
+                // mouseHold.current  = true
             //     if(e.target && e.target.localName === 'text') {
             //         let parent = e.target.instance.parent()
             //         parent.node.instance.css({ cursor: 'pointer', fill: '#f03' })
@@ -162,21 +127,35 @@ export default function Metro() {
             })
             drawRef.current.on('mouseup', (e) => {
                 e.preventDefault()
+                if(mouseHold.current) {
+                    console.log("当前按住，准备解除")
+                }
+                mouseHold.current = false
                 if(selectedStationNodeRef.current !== null) {
                     
                 }
             })
             drawRef.current.on('mousemove', (e) => {
                 e.preventDefault()
-                if(e.target.nodeName.toLowerCase() !== 'svg') {
-                    if(selectedStationNodeRef.current !== null 
-                    ) {
-                        console.log("mouse move", e)
-                        // let p = new MathetroData(startPoint, {x:e.clientX, y:e.clientY}, 3).getPath()
-                        if(paths.length === 0) {
-                            addPath(startPoint.x, startPoint.y, e.clientX, e.clientY)
-                        }else{
-                            updatePath(startPoint.x, startPoint.y, e.clientX, e.clientY)
+                if(mouseHold.current) {
+                    console.log("当前按压移动")
+                }else{
+                    console.log("当前非按压移动")
+                }
+                if (mouseHold.current) {
+                    console.log('mouse down and move')
+                    if(e.target.nodeName.toLowerCase() !== 'svg') {
+                        if(selectedStationNodeRef.current !== null 
+                        ) {
+                            console.log("mouse move", e)
+                            let x = e.clientX - 64
+                            let y=  e.clientY - 64
+                            // let p = new MathetroData(startPoint, {x:e.clientX, y:e.clientY}, 3).getPath()
+                            if(paths.length === 0) {
+                                addPath(startPoint.x, startPoint.y, x,y)
+                            }else{
+                                updatePath(startPoint.x, startPoint.y, x,y)
+                            }
                         }
                     }
                 }
@@ -185,6 +164,10 @@ export default function Metro() {
                 console.log('touchstart----',e)
             })
             drawRef.current.on('mousedown', (e) => {
+                if(!mouseHold.current) {
+                    console.log("当前非按住，准备按压")
+                }
+                mouseHold.current  = true
                 console.log('mousedown----',e)
                 e.preventDefault()
                 console.log('mousedown',e)
@@ -203,69 +186,74 @@ export default function Metro() {
                 }
             })
             // draw.group().addClass('1-200-100-400-600').path("M200 100 L 400 600").fill("none").stroke({ color: '#000', width: 6, linecap: 'round', linejoin: 'round' });
-            for (let line = 0; line < lineList.length; line++) {
-                if(lineList[line].line_no !== 1) {
-                    continue;
-                }
+            // for (let line = 0; line < lineList.length; line++) {
+            //     if(lineList[line].line_no !== 1) {
+            //         continue;
+            //     }
 
-                for (let i = 0; i < lineList[line].stations.length; i++) {
-                    let pointList = lineList[line].stations[i];
-                    if (pointList.x === undefined || pointList.x === 0) {
-                        continue;
-                    }
-                    var group = drawRef.current.group();
-                    if (pointList.nextPoint !== undefined && pointList.nextPoint.length > 0) {
-                        for (let next = 0; next < pointList.nextPoint.length; next++) {
-                            let onePoint = pointList.nextPoint[next]
-                            let angle_width = onePoint.angle_width;
-                            let y_max_len = onePoint.y - pointList.y;
-                            let max_len = y_max_len;
-                            let x_max_len = onePoint.x - pointList.x;
-                            if (x_max_len > y_max_len) {
-                                max_len = x_max_len
-                            }
-                            if (onePoint.angle_percent > 0) {
-                                if (max_len > 0) {
-                                    angle_width = max_len * onePoint.angle_percent / 3
-                                }
-                            }
-                            if (max_len < angle_width) {
-                                angle_width = max_len
-                            }
-                            let pathStr = ""
-                            if (onePoint.angle == 90) {
-                                pathStr = cal90(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
-                            } else if (onePoint.angle == 270) {
-                                pathStr = cal270(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
-                            } else if (onePoint.angle == 135) {
-                                pathStr = cal135(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
-                            } else if (onePoint.angle == 225) {
-                                pathStr = cal225(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
-                            } else {
-                                pathStr = calDirect(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
-                            }
-                            if (pathStr !== '') {
-                                let path = group.path(pathStr);
-                                path.fill("none").move(pointList.x, pointList.y);
-                                path.stroke({ color: lineList[line].line_color, width: lineList[line].strokeWidth??6, linecap: 'round', linejoin: 'round' });
-                            }
-                        }
-                    }
-                    let x = `1-${pointList.x}-${pointList.y}`
-                    let stationGroup = group.group().translate(pointList.x, pointList.y)
-                    // 首站
-                    stationGroup.circle(svgStyle.circleWidth).
-                    stroke({ color: svgStyle.circleColor }).
-                    fill("#fff").
-                    move(-svgStyle.circleWidth / 2, -svgStyle.circleWidth / 2);
+            //     for (let i = 0; i < lineList[line].stations.length; i++) {
+            //         let pointList = lineList[line].stations[i];
+            //         if (pointList.x === undefined || pointList.x === 0) {
+            //             continue;
+            //         }
+            //         var group = drawRef.current.group();
+            //         if (pointList.nextPoint !== undefined && pointList.nextPoint.length > 0) {
+            //             for (let next = 0; next < pointList.nextPoint.length; next++) {
+            //                 let onePoint = pointList.nextPoint[next]
+            //                 let angle_width = onePoint.angle_width;
+            //                 let y_max_len = onePoint.y - pointList.y;
+            //                 let max_len = y_max_len;
+            //                 let x_max_len = onePoint.x - pointList.x;
+            //                 if (x_max_len > y_max_len) {
+            //                     max_len = x_max_len
+            //                 }
+            //                 if (onePoint.angle_percent > 0) {
+            //                     if (max_len > 0) {
+            //                         angle_width = max_len * onePoint.angle_percent / 3
+            //                     }
+            //                 }
+            //                 if (max_len < angle_width) {
+            //                     angle_width = max_len
+            //                 }
+            //                 let pathStr = ""
+            //                 if (onePoint.angle == 90) {
+            //                     pathStr = cal90(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
+            //                 } else if (onePoint.angle == 270) {
+            //                     pathStr = cal270(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
+            //                 } else if (onePoint.angle == 135) {
+            //                     pathStr = cal135(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
+            //                 } else if (onePoint.angle == 225) {
+            //                     pathStr = cal225(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
+            //                 } else {
+            //                     pathStr = calDirect(pointList.x, pointList.y, onePoint.x, onePoint.y, angle_width, svgStyle.circleWidth);
+            //                 }
+            //                 if (pathStr !== '') {
+            //                     let path = group.path(pathStr);
+            //                     path.fill("none").move(pointList.x, pointList.y);
+            //                     path.stroke({ color: lineList[line].line_color, width: lineList[line].strokeWidth??6, linecap: 'round', linejoin: 'round' });
+            //                 }
+            //             }
+            //         }
+            //         let x = `1-${pointList.x}-${pointList.y}`
+            //         let stationGroup = group.group().translate(pointList.x, pointList.y)
+            //         // 首站
+            //         stationGroup.circle(svgStyle.circleWidth).
+            //         stroke({ color: svgStyle.circleColor }).
+            //         fill("#fff").
+            //         move(-svgStyle.circleWidth / 2, -svgStyle.circleWidth / 2);
 
-                    if (pointList.station_name_position !== undefined) {
-                        stationGroup.text(pointList.station_name).
-                        move(0, 5).
-                        font({ fontWeight: 'bold', family: 'Inconsolata' });
-                    }
-                }
-            }
+            //         if (pointList.station_name_position !== undefined) {
+            //             stationGroup.text(pointList.station_name).
+            //             move(0, 5).
+            //             font({ fontWeight: 'bold', family: 'Inconsolata' });
+            //         }
+            //     }
+            // }
+            drawStations(drawRef.current)
+            return () => {
+                drawRef.current.clear(); // 清空画布
+                SVGWrapperRefElement.current.innerHTML = ''
+            };
         }
     }, [nowRouter])
 
@@ -305,43 +293,6 @@ export default function Metro() {
         let lEnd = [x2, y2]
         let nextPoint = [x2 - angle_width, y2];
         return `M${mPoint[0]},${mPoint[1]} L${nextPoint[0]},${nextPoint[1]} L${lEnd[0]},${lEnd[1]}`
-    }
-
-    // 开始坐标和结束的y坐标
-    // let startX = 200;
-    // let startY = 250;
-    // let endY = 285;
-    // let angle = 225; // 角度，范围为0到360
-    const calculateEndpointX = (startX, startY, endY, angleInDegrees) => {
-        const angleInRadians = angleInDegrees * (Math.PI / 180);
-
-        // 计算终点的x坐标
-        const dx = (endY - startY) / Math.tan(angleInRadians);
-        let endX = startX + dx;
-
-        // 计算终点的y坐标
-        endY = endY;
-
-        return { x: endX, y: endY };
-    }
-
-    // 有开始坐标和结束的x坐标
-    //let startX = 200;
-    // let startY = 250;
-    // let endX = 285;
-    // let angle = 135; // 角度，范围为0到360
-    const calculateEndpointY = (startX, startY, endX, angleInDegrees) => {
-        const angleInRadians = angleInDegrees * (Math.PI / 180);
-
-        // 计算终点的x坐标
-        const dx = endX - startX;
-        const dy = dx * Math.tan(angleInRadians);
-        const endY = startY + dy;
-
-        // 计算终点的y坐标
-        endX = endX;
-
-        return { x: endX, y: endY };
     }
 
     const toggleDrawer = (newOpen) => () => {
